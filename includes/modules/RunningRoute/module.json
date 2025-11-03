@@ -1,0 +1,8 @@
+{
+  "name": "Running Route",
+  "slug": "running_route",
+  "version": "1.0.0",
+  "type": "frontend",
+  "icon": "location",
+  "category": "layout"
+}

@@ -1,0 +1,8 @@
+/node_modules
+/vendor
+*.log
+.DS_Store
+.env
+/wp-content
+/dist
+/build

@@ -1,0 +1,12 @@
+{
+  "name": "running-routes",
+  "version": "0.1.0",
+  "description": "WordPress plugin to display GPX tracks on interactive maps.",
+  "main": "running-routes.php",
+  "scripts": {
+    "start": "divi-scripts start",
+    "build": "divi-scripts build"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

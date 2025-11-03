@@ -1,0 +1,18 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "running-routes/map",
+	"title": "Running Route Map",
+	"category": "widgets",
+	"icon": "location",
+	"attributes": {
+		"routeId": { "type": "number" },
+		"height": { "type": "number", "default": 500 },
+		"layer": { "type": "string", "default": "opentopomap" }
+	},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "running-routes",
+	"editorScript": "file:./index.js"
+}

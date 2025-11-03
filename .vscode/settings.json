@@ -1,0 +1,8 @@
+{
+  "intelephense.stubs": [
+    "wordpress"
+  ],
+  "intelephense.diagnostics.undefinedTypes": false,
+  "intelephense.diagnostics.undefinedFunctions": false,
+  "intelephense.diagnostics.undefinedConstants": false
+}
