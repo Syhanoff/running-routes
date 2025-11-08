@@ -30,7 +30,7 @@ class RunningRoute_Module extends ET_Builder_Module
     $height   = $this->props['height'];
 
     if (empty($route_id)) {
-      return '<p>' . esc_html__('Please select a route ID.', 'running-routes') . '</p>';
+      return '<p>' . esc_html__('Please select a route ID. (DIVI5)', 'running-routes') . '</p>';
     }
 
     $route = \RunningRoutes\Core\RouteManager::get_route((int) $route_id);

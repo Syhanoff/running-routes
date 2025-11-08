@@ -1,6 +1,21 @@
 <?php
-class RR_Divi_Running_Routes_Module extends ET_Builder_Module {
-	public $slug       = 'rr_running_routes';
+/**
+ * Divi 5 Module for Running Routes
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+// Если Divi 5 активен — регистрируем модуль
+add_action( 'plugins_loaded', function () {
+	if ( function_exists( 'et_builder_load_extensions' ) ) {
+		require_once RUNNING_ROUTES_PATH . 'integrations/divi/extension/divi5-module.php';
+	}
+} );
+
+class RR_Divi5_Running_Routes_Module extends ET_Builder_Module {
+	public $slug       = 'rr_running_routes_divi5';
 	public $vb_support = 'on';
 
 	protected $module_credits = [
@@ -10,7 +25,7 @@ class RR_Divi_Running_Routes_Module extends ET_Builder_Module {
 	];
 
 	public function init() {
-		$this->name = esc_html__( 'Running Route', 'running-routes' );
+		$this->name = esc_html__( 'Running Route (Divi 5)', 'running-routes' );
 	}
 
 	public function get_fields() {
@@ -51,11 +66,11 @@ class RR_Divi_Running_Routes_Module extends ET_Builder_Module {
 		$layer    = $this->props['map_layer'];
 
 		if ( empty( $route_id ) ) {
-			return '<p>' . esc_html__( 'Please select a route ID. (DIVI4)', 'running-routes' ) . '</p>';
+			return '<p>' . esc_html__( 'Please select a route ID.', 'running-routes' ) . '</p>';
 		}
 
 		return do_shortcode( "[running_route id='{$route_id}' height='{$height}' layer='{$layer}']" );
 	}
 }
 
-new RR_Divi_Running_Routes_Module;
+new RR_Divi5_Running_Routes_Module;

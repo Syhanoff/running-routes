@@ -1,92 +1,184 @@
 <?php
+
 /**
- * GPX Upload Meta Box for 'running_route' only
+ * GPX Upload Meta Box for Running Routes
  */
-
-function rr_add_gpx_meta_box() {
-    // Только для running_route
-    add_meta_box(
-        'rr_gpx_upload',
-        __( 'GPX File', 'running-routes' ),
-        'rr_render_gpx_meta_box',
-        'running_route',
-        'side',
-        'high'
-    );
+function rr_add_gpx_meta_box()
+{
+  add_meta_box(
+    'rr_gpx_upload',
+    __('GPX File', 'running-routes'),
+    'rr_render_gpx_meta_box',
+    'running_route',
+    'side',
+    'high'
+  );
 }
-add_action( 'add_meta_boxes', 'rr_add_gpx_meta_box' );
+add_action('add_meta_boxes', 'rr_add_gpx_meta_box');
 
-function rr_render_gpx_meta_box( $post ) {
-    $attachment_id = get_post_meta( $post->ID, '_rr_gpx_attachment_id', true );
-    $url = $attachment_id ? wp_get_attachment_url( $attachment_id ) : '';
-    $filename = $attachment_id ? basename( get_attached_file( $attachment_id ) ) : '';
+function rr_render_gpx_meta_box($post)
+{
+  $attachment_id = get_post_meta($post->ID, '_rr_gpx_attachment_id', true);
+  $url = $attachment_id ? wp_get_attachment_url($attachment_id) : '';
+  $filename = $attachment_id ? basename(get_attached_file($attachment_id)) : '';
 
-    wp_nonce_field( 'rr_save_gpx', 'rr_gpx_nonce' );
-    ?>
-    <input type="file" name="rr_gpx_file" accept=".gpx" style="width:100%;" />
-    
-    <?php if ( $url && $filename ) : ?>
-        <p style="margin-top:10px; padding:8px; background:#f8f8f8; border-radius:4px;">
-            <strong><?php echo esc_html( $filename ); ?></strong><br>
-            <a href="<?php echo esc_url( $url ); ?>" target="_blank" style="display:inline-block; margin-top:4px;">
-                <?php esc_html_e( 'Download', 'running-routes' ); ?>
-            </a>
-            <button type="button" class="button-link rr-remove-gpx" style="color:#a00; margin-left:10px;">
-                <?php esc_html_e( 'Remove', 'running-routes' ); ?>
-            </button>
-            <input type="hidden" name="rr_gpx_current" value="<?php echo esc_attr( $attachment_id ); ?>" />
-        </p>
+  wp_nonce_field('rr_save_gpx', 'rr_gpx_nonce');
 
-        <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const removeBtn = document.querySelector('.rr-remove-gpx');
-            if (removeBtn) {
-                removeBtn.addEventListener('click', function() {
-                    const input = document.querySelector('input[name="rr_gpx_current"]');
-                    if (input) input.value = '';
-                    const container = this.closest('p');
-                    if (container) container.style.display = 'none';
-                    // Отметим, что файл нужно удалить
-                    const hidden = document.createElement('input');
-                    hidden.type = 'hidden';
-                    hidden.name = 'rr_gpx_remove';
-                    hidden.value = '1';
-                    document.getElementById('post').appendChild(hidden);
-                });
-            }
-        });
-        </script>
-    <?php endif;
+?>
+  <div class="running-routes-gpx-metabox">
+    <div class="gpx-upload-from-device-button">
+      <button type="button" class="button button-primary upload-from-device">
+        <?php _e('Загрузить с устройства', 'running-routes'); ?>
+      </button>
+    </div>
+    <div class="gpx-select-from-library-button">
+      <button type="button" class="button button-secondary select-from-library">
+        <?php _e('Из медиабиблиотеки', 'running-routes'); ?>
+      </button>
+    </div>
+
+    <?php if ($url && $filename): ?>
+      <div class="gpx-file-info" style="margin-top:15px; padding:12px; background:#f8f9f9; border-radius:4px; border:1px solid #e2e4e7;">
+        <p><strong><?php _e('Ссылка на файл:', 'running-routes'); ?></strong></p>
+        <div class="gpx-url-container" style="position:relative; margin:8px 0;">
+          <input type="text" class="gpx-url widefat" value="<?php echo esc_url($url); ?>" readonly style="padding-right:30px; font-family: Consolas, Monaco, monospace; font-size: 13px;">
+          <span class="dashicons dashicons-admin-links copy-url" style="position:absolute; right:8px; top:50%; transform:translateY(-50%); cursor:pointer; color:#666;" title="<?php _e('Копировать в буфер', 'running-routes'); ?>"></span>
+        </div>
+
+        <p><strong><?php _e('Шорткод:', 'running-routes'); ?></strong></p>
+        <div class="shortcode-container" style="position:relative; margin:8px 0;">
+          <input type="text" class="shortcode widefat" value="[running_route id=&quot;<?php echo esc_attr($post->ID); ?>&quot;]" readonly style="padding-right:30px; font-family: Consolas, Monaco, monospace; font-size: 13px;">
+          <span class="dashicons dashicons-admin-links copy-shortcode" style="position:absolute; right:8px; top:50%; transform:translateY(-50%); cursor:pointer; color:#666;" title="<?php _e('Копировать в буфер', 'running-routes'); ?>"></span>
+        </div>
+
+        <div class="gpx-download-button">
+          <a href="<?php echo esc_url($url); ?>" class="button button-primary" download="<?php echo esc_attr($filename); ?>">
+            <?php _e('Скачать файл', 'running-routes'); ?>
+          </a>
+        </div>
+
+        <div class="gpx-detach-button"">
+                    <button type=" button" class="button button-secondary detach-gpx-url">
+          <?php _e('Открепить файл', 'running-routes'); ?>
+          </button>
+        </div>
+
+        <div class="gpx-remove-link">
+          <a href="#" class="remove-gpx-url">
+            <?php _e('Удалить файл', 'running-routes'); ?>
+          </a>
+        </div>
+      </div>
+    <?php endif; ?>
+
+    <input type="file" id="rr-gpx-device-upload" name="rr_gpx_file" accept=".gpx" style="display:none;">
+    <input type="hidden" name="_rr_gpx_attachment_id" id="_rr_gpx_attachment_id" value="<?php echo esc_attr($attachment_id); ?>">
+  </div>
+<?php
 }
 
-function rr_save_gpx_file( $post_id ) {
-    // Безопасность
-    if ( ! isset( $_POST['rr_gpx_nonce'] ) || ! wp_verify_nonce( $_POST['rr_gpx_nonce'], 'rr_save_gpx' ) ) {
-        return;
-    }
-    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-        return;
-    }
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
+// AJAX handler для сохранения attachment ID
+add_action('wp_ajax_rr_save_attachment_id', function () {
+  check_ajax_referer('running_routes_admin_nonce', 'nonce');
 
-    // Удаление файла
-    if ( isset( $_POST['rr_gpx_remove'] ) && $_POST['rr_gpx_remove'] ) {
-        delete_post_meta( $post_id, '_rr_gpx_attachment_id' );
-        return;
-    }
+  $post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
+  $attachment_id = isset($_POST['attachment_id']) ? intval($_POST['attachment_id']) : 0;
 
-    // Загрузка нового файла
-    if ( ! empty( $_FILES['rr_gpx_file']['name'] ) ) {
-        require_once ABSPATH . 'wp-admin/includes/media.php';
-        require_once ABSPATH . 'wp-admin/includes/file.php';
-        require_once ABSPATH . 'wp-admin/includes/image.php';
+  if (!$post_id || !current_user_can('edit_post', $post_id)) {
+    wp_send_json_error(__('Недостаточно прав', 'running-routes'));
+  }
 
-        $attachment_id = media_handle_upload( 'rr_gpx_file', $post_id );
-        if ( ! is_wp_error( $attachment_id ) ) {
-            update_post_meta( $post_id, '_rr_gpx_attachment_id', $attachment_id );
-        }
-    }
-}
-add_action( 'save_post_running_route', 'rr_save_gpx_file' );
+  if ($attachment_id) {
+    update_post_meta($post_id, '_rr_gpx_attachment_id', $attachment_id);
+  } else {
+    delete_post_meta($post_id, '_rr_gpx_attachment_id');
+  }
+
+  $url = $attachment_id ? wp_get_attachment_url($attachment_id) : '';
+  $filename = $attachment_id ? basename(get_attached_file($attachment_id)) : '';
+  $shortcode = $attachment_id ? '[running_route id="' . $post_id . '"]' : '';
+
+  wp_send_json_success([
+    'attachment_id' => $attachment_id,
+    'url' => $url,
+    'filename' => $filename,
+    'shortcode' => $shortcode
+  ]);
+});
+
+// AJAX handler для удаления файла
+add_action('wp_ajax_rr_remove_gpx_file', function () {
+  check_ajax_referer('running_routes_admin_nonce', 'nonce');
+
+  $post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
+  if (!$post_id || !current_user_can('edit_post', $post_id)) {
+    wp_send_json_error(__('Недостаточно прав', 'running-routes'));
+  }
+
+  $attachment_id = get_post_meta($post_id, '_rr_gpx_attachment_id', true);
+  if ($attachment_id) {
+    wp_delete_attachment($attachment_id, true);
+    delete_post_meta($post_id, '_rr_gpx_attachment_id');
+    wp_send_json_success();
+  }
+
+  wp_send_json_error(__('Файл не найден', 'running-routes'));
+});
+
+// AJAX handler для открепления файла
+add_action('wp_ajax_rr_detach_gpx_file', function () {
+  check_ajax_referer('running_routes_admin_nonce', 'nonce');
+
+  $post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
+  if (!$post_id || !current_user_can('edit_post', $post_id)) {
+    wp_send_json_error(__('Недостаточно прав', 'running-routes'));
+  }
+
+  delete_post_meta($post_id, '_rr_gpx_attachment_id');
+  wp_send_json_success();
+});
+
+// AJAX handler для загрузки файла с устройства
+add_action('wp_ajax_rr_upload_gpx_file', function () {
+  check_ajax_referer('running_routes_admin_nonce', 'nonce');
+
+  $post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
+  if (!$post_id || !current_user_can('edit_post', $post_id)) {
+    wp_send_json_error(__('Недостаточно прав', 'running-routes'));
+  }
+
+  if (!isset($_FILES['gpx_file']) || empty($_FILES['gpx_file']['name'])) {
+    wp_send_json_error(__('Нет файла для загрузки', 'running-routes'));
+  }
+
+  // Validate file type
+  $file_name = $_FILES['gpx_file']['name'];
+  $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+
+  if ($file_ext !== 'gpx') {
+    wp_send_json_error(__('Разрешены только GPX файлы', 'running-routes'));
+  }
+
+  require_once ABSPATH . 'wp-admin/includes/media.php';
+  require_once ABSPATH . 'wp-admin/includes/file.php';
+  require_once ABSPATH . 'wp-admin/includes/image.php';
+
+  $attachment_id = media_handle_upload('gpx_file', $post_id);
+
+  if (is_wp_error($attachment_id)) {
+    wp_send_json_error($attachment_id->get_error_message());
+  }
+
+  $url = wp_get_attachment_url($attachment_id);
+  $filename = basename(get_attached_file($attachment_id));
+  $shortcode = '[running_route id="' . $post_id . '"]';
+
+  update_post_meta($post_id, '_rr_gpx_attachment_id', $attachment_id);
+
+  wp_send_json_success([
+    'attachment_id' => $attachment_id,
+    'url' => $url,
+    'filename' => $filename,
+    'shortcode' => $shortcode
+  ]);
+});
