@@ -1,0 +1,84 @@
+.running-routes-gpx-metabox .gpx-url-container,
+.running-routes-gpx-metabox .shortcode-container {
+  position: relative;
+  margin: 8px 0;
+}
+
+.running-routes-gpx-metabox .gpx-url,
+.running-routes-gpx-metabox .shortcode {
+  font-family: Consolas, Monaco, monospace;
+  font-size: 13px;
+  padding-right: 30px !important;
+}
+
+.running-routes-gpx-metabox .copy-url,
+.running-routes-gpx-metabox .copy-shortcode {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+  font-size: 16px;
+}
+
+.running-routes-gpx-metabox .copy-url:hover,
+.running-routes-gpx-metabox .copy-shortcode:hover {
+  color: #0a4b78;
+}
+
+.running-routes-gpx-metabox .gpx-file-info {
+  margin-top: 15px;
+  padding: 12px;
+  background: #f8f9f9;
+  border-radius: 4px;
+  border: 1px solid #e2e4e7;
+}
+
+.running-routes-gpx-metabox .gpx-download-button a.button,
+.running-routes-gpx-metabox .gpx-detach-button button,
+.running-routes-gpx-metabox .gpx-upload-from-device-button button,
+.running-routes-gpx-metabox .gpx-select-from-library-button button {
+  display: inline-block;
+  width: auto;
+  max-width: 100%;
+}
+
+.running-routes-gpx-metabox .gpx-download-button,
+.running-routes-gpx-metabox .gpx-detach-button,
+.running-routes-gpx-metabox .gpx-remove-link,
+.running-routes-gpx-metabox .gpx-upload-from-device-button,
+.running-routes-gpx-metabox .gpx-select-from-library-button {
+  margin-top: 15px;
+  text-align: right;
+}
+
+.running-routes-gpx-metabox .gpx-remove-link {
+  margin-top: 8px;
+}
+
+.running-routes-gpx-metabox .gpx-remove-link a {
+  display: inline-block;
+  color: #dc3232;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.running-routes-gpx-metabox .gpx-remove-link a:hover {
+  text-decoration: underline;
+}
+
+.copy-tooltip {
+  position: absolute;
+  background: #32373c;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 100000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}

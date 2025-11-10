@@ -85,12 +85,20 @@ add_action('et_builder_ready', function () {
   }
 });
 
-// Регистрация Divi-модулей (и Legacy, и Divi 5)
+// Регистрация Divi-модулей (Divi 5)
 // add_action('et_builder_ready', function () {
 //   if (class_exists('ET_Builder_Module')) {
 //     require_once RUNNING_ROUTES_PATH . 'includes/modules/RunningRoute/RunningRoute.php';
 //   }
 // });
+
+// Регистрация Divi-модулей (Divi 5 через шорткод)
+// add_action('et_builder_ready', function () {
+//   if (class_exists('ET_Builder_Module')) {
+//     require RUNNING_ROUTES_PATH . 'integrations/divi/extension/divi5-module.php';
+//   }
+// });
+
 
 // Активация
 register_activation_hook(__FILE__, function () {
@@ -101,11 +109,6 @@ register_activation_hook(__FILE__, function () {
 register_deactivation_hook(__FILE__, function () {
   // Очистка кэшей и т.п.
 });
-
-// Отключить Divi Builder для running_route
-// add_filter('et_builder_post_types', function ($post_types) {
-//   return array_diff($post_types, ['running_route']);
-// });
 
 // Разрешить загрузку GPX-файлов
 add_filter('upload_mimes', function ($mimes) {
@@ -145,4 +148,52 @@ add_action('admin_footer', function () {
             })();
         </script>';
   }
+});
+
+// Отключить Divi Builder для running_route
+// add_filter('et_builder_post_types', function ($post_types) {
+//   return array_diff($post_types, ['running_route']);
+// });
+
+
+// Admin scripts and styles for GPX meta box
+add_action('admin_enqueue_scripts', function() {
+    $screen = get_current_screen();
+    
+    // Only load on running_route edit screens
+    if (!$screen || $screen->post_type !== 'running_route' || !in_array($screen->base, ['post', 'post-new'])) {
+        return;
+    }
+    
+    // Enqueue media scripts
+    wp_enqueue_media();
+    
+    // Enqueue admin JS
+    wp_enqueue_script(
+        'running-routes-admin',
+        RUNNING_ROUTES_URL . 'assets/js/admin.js',
+        ['wp-i18n'], // Dependencies
+        RUNNING_ROUTES_VERSION,
+        true
+    );
+    
+    // Localize script data
+    wp_localize_script('running-routes-admin', 'runningRoutesAdminData', [
+        'postId'    => get_the_ID() ?: 0,
+        'nonce'     => wp_create_nonce('running_routes_admin_nonce'),
+        'i18n'      => [
+            'copySuccess'   => __('Скопировано!', 'running-routes'),
+            'invalidFile'   => __('Пожалуйста, выберите файл GPX', 'running-routes'),
+            'selectGpx'     => __('Выберите GPX файл', 'running-routes'),
+            'useFile'       => __('Использовать файл', 'running-routes'),
+        ]
+    ]);
+    
+    // Enqueue admin CSS
+    wp_enqueue_style(
+        'running-routes-admin',
+        RUNNING_ROUTES_URL . 'assets/css/admin.css',
+        [],
+        RUNNING_ROUTES_VERSION
+    );
 });
